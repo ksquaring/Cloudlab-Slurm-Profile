@@ -62,46 +62,47 @@ pc.defineParameter("startVNC",  "Start X11 VNC on your nodes",
                    "client. Works really well, give it a try!")
 
 # Optional link speed, normally the resource mapper will choose for you based on node availability
-pc.defineParameter("linkSpeed", "Link Speed",portal.ParameterType.INTEGER, 0,
-                   [(0,"Any"),(100000,"100Mb/s"),(1000000,"1Gb/s"),(10000000,"10Gb/s"),(25000000,"25Gb/s"),(100000000,"100Gb/s")],
+pc.defineParameter("linkSpeed", "Link Speed", portal.ParameterType.INTEGER, 0,
+                   [(0, "Any"), (100000, "100Mb/s"), (1000000, "1Gb/s"), (10000000,
+                                                                          "10Gb/s"), (25000000, "25Gb/s"), (100000000, "100Gb/s")],
                    advanced=True,
                    longDescription="A specific link speed to use for your lan. Normally the resource " +
                    "mapper will choose for you based on node availability and the optional physical type.")
-                   
+
 # For very large lans you might to tell the resource mapper to override the bandwidth constraints
 # and treat it a "best-effort"
 pc.defineParameter("bestEffort",  "Best Effort", portal.ParameterType.BOOLEAN, False,
-                    advanced=True,
-                    longDescription="For very large lans, you might get an error saying 'not enough bandwidth.' " +
-                    "This options tells the resource mapper to ignore bandwidth and assume you know what you " +
-                    "are doing, just give me the lan I ask for (if enough nodes are available).")
-                    
+                   advanced=True,
+                   longDescription="For very large lans, you might get an error saying 'not enough bandwidth.' " +
+                   "This options tells the resource mapper to ignore bandwidth and assume you know what you " +
+                   "are doing, just give me the lan I ask for (if enough nodes are available).")
+
 # Sometimes you want all of nodes on the same switch, Note that this option can make it impossible
 # for your experiment to map.
 pc.defineParameter("sameSwitch",  "No Interswitch Links", portal.ParameterType.BOOLEAN, False,
-                    advanced=True,
-                    longDescription="Sometimes you want all the nodes connected to the same switch. " +
-                    "This option will ask the resource mapper to do that, although it might make " +
-                    "it imppossible to find a solution. Do not use this unless you are sure you need it!")
+                   advanced=True,
+                   longDescription="Sometimes you want all the nodes connected to the same switch. " +
+                   "This option will ask the resource mapper to do that, although it might make " +
+                   "it imppossible to find a solution. Do not use this unless you are sure you need it!")
 
 # Optional ephemeral blockstore
 pc.defineParameter("tempFileSystemSize", "Temporary Filesystem Size",
-                   portal.ParameterType.INTEGER, 0,advanced=True,
+                   portal.ParameterType.INTEGER, 0, advanced=True,
                    longDescription="The size in GB of a temporary file system to mount on each of your " +
                    "nodes. Temporary means that they are deleted when your experiment is terminated. " +
                    "The images provided by the system have small root partitions, so use this option " +
                    "if you expect you will need more space to build your software packages or store " +
                    "temporary files.")
-                   
-# Instead of a size, ask for all available space. 
+
+# Instead of a size, ask for all available space.
 pc.defineParameter("tempFileSystemMax",  "Temp Filesystem Max Space",
-                    portal.ParameterType.BOOLEAN, False,
-                    advanced=True,
-                    longDescription="Instead of specifying a size for your temporary filesystem, " +
-                    "check this box to allocate all available disk space. Leave the size above as zero.")
+                   portal.ParameterType.BOOLEAN, False,
+                   advanced=True,
+                   longDescription="Instead of specifying a size for your temporary filesystem, " +
+                   "check this box to allocate all available disk space. Leave the size above as zero.")
 
 pc.defineParameter("tempFileSystemMount", "Temporary Filesystem Mount Point",
-                   portal.ParameterType.STRING,"/mydata",advanced=True,
+                   portal.ParameterType.STRING, "/mydata", advanced=True,
                    longDescription="Mount the temporary file system at this mount point; in general you " +
                    "you do not need to change this, but we provide the option just in case your software " +
                    "is finicky.")
@@ -118,7 +119,8 @@ params = pc.bindParameters()
 
 # Check parameter validity.
 if params.nodeCount < 1:
-    pc.reportError(portal.ParameterError("You must choose at least 1 node.", ["nodeCount"]))
+    pc.reportError(portal.ParameterError(
+        "You must choose at least 1 node.", ["nodeCount"]))
 
 if params.tempFileSystemSize < 0 or params.tempFileSystemSize > 200:
     pc.reportError(portal.ParameterError("Please specify a size greater then zero and " +
@@ -127,7 +129,8 @@ if params.tempFileSystemSize < 0 or params.tempFileSystemSize > 200:
 if params.phystype != "":
     tokens = params.phystype.split(",")
     if len(tokens) != 1:
-        pc.reportError(portal.ParameterError("Only a single type is allowed", ["phystype"]))
+        pc.reportError(portal.ParameterError(
+            "Only a single type is allowed", ["phystype"]))
 
 pc.verifyParameters()
 
@@ -181,16 +184,23 @@ for i in range(params.nodeCount):
             pass
         bs.placement = "any"
         pass
+    if i == 0:
+        node.addService(pg.Execute(shell="bash", command="/local/repository/rootnode.sh"))
+    else:
+        node.addService(pg.Execute(shell="bash", command="/local/repository/computenode.sh"))
+
+        
+
     #
     # Install and start X11 VNC. Calling this informs the Portal that you want a VNC
     # option in the node context menu to create a browser VNC client.
     #
-    # If you prefer to start the VNC server yourself (on port 5901) then add nostart=True. 
+    # If you prefer to start the VNC server yourself (on port 5901) then add nostart=True.
     #
     if params.startVNC:
         node.startVNC()
         pass
     pass
 
-# Print the RSpec to the enclosing page.
+    # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
