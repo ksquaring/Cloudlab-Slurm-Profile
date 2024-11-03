@@ -15,7 +15,7 @@ systemctl restart munge
 
 sudo apt install slurm-wlm
 cp /local/repository/slurm.conf /etc/slurm/slurm.conf
-cp /local/repositoty/cgroup.conf /etc/slurm/cgroup.conf
+cp /local/repository/cgroup.conf /etc/slurm/cgroup.conf
 systemctl enable slurmctld
 systemctl restart slurmctld
 systemctl enable slurmd
