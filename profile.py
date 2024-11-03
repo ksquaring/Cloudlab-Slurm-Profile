@@ -184,6 +184,7 @@ for i in range(params.nodeCount):
             pass
         bs.placement = "any"
         pass
+    #add something to configure node CPUs in slurm.conf.
     if i == 0:
         node.addService(pg.Execute(shell="bash", command="/local/repository/rootnode.sh"))
     else:
