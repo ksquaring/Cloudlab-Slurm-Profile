@@ -1,12 +1,7 @@
-"""Variable number of nodes in a lan. You have the option of picking from one
-of several standard images we provide, or just use the default (typically a recent
-version of Ubuntu). You may also optionally pick the specific hardware type for
-all the nodes in the lan. 
-
+"""Configures Slurm for x physical nodes in a LAN. Node designated node0 will be the Slurm control node.
+Slurm runs using root user, not slurm user. 
 Instructions:
-Wait for the experiment to start, and then log into one or more of the nodes
-by clicking on them in the toplogy, and choosing the `shell` menu option.
-Use `sudo` to run root commands. 
+Built specifically for UMass cluster. Edit slurm.conf for it to work on other clusters. 
 """
 
 # Import the Portal object.
@@ -33,9 +28,7 @@ imageList = [
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD', 'UBUNTU 22.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD', 'UBUNTU 20.04'),
     ('urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-STD', 'UBUNTU 18.04'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//CENTOS8S-64-STD',  'CENTOS 8 Stream'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//FBSD133-64-STD', 'FreeBSD 13.3'),
-    ('urn:publicid:IDN+emulab.net+image+emulab-ops//FBSD141-64-STD', 'FreeBSD 14.1')]
+    ]
 
 pc.defineParameter("osImage", "Select OS image",
                    portal.ParameterType.IMAGE,
@@ -161,7 +154,6 @@ for i in range(params.nodeCount):
     else:
         name = "node" + str(i)
         node = request.RawPC(name)
-        node.hardware_type = 'rs620'
         pass
     if params.osImage and params.osImage != "default":
         node.disk_image = params.osImage
