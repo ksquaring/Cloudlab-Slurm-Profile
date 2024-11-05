@@ -10,7 +10,7 @@ Use `sudo` to run root commands.
 """
 
 # Import the Portal object.
-import geni.portal as portal
+import geni.portal as portal # type: ignore
 # Import the ProtoGENI library.
 import geni.rspec.pg as pg
 # Emulab specific extensions.
@@ -161,6 +161,7 @@ for i in range(params.nodeCount):
     else:
         name = "node" + str(i)
         node = request.RawPC(name)
+        node.hardware_type = 'rs620'
         pass
     if params.osImage and params.osImage != "default":
         node.disk_image = params.osImage
