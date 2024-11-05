@@ -187,9 +187,9 @@ for i in range(params.nodeCount):
         pass
     #add something to configure node CPUs in slurm.conf.
     if i == 0:
-        node.addService(pg.Execute(shell="bash", command="whoami && sudo chmod +x /local/repository/rootnode.sh && sudo /local/repository/rootnode.sh"))
+        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/rootnode.sh && sudo /local/repository/rootnode.sh"))
     else:
-        node.addService(pg.Execute(shell="bash", command="whoami && sudo chmod +x /local/repository/computenode.sh && sudo /local/repository/computenode.sh"))
+        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/computenode.sh && sudo /local/repository/computenode.sh"))
 
         
 
