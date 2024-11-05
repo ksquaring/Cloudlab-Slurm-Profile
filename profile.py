@@ -111,9 +111,9 @@ pc.defineParameter("exclusiveVMs", "Force use of exclusive VMs",
 params = pc.bindParameters()
 
 # Check parameter validity.
-if params.nodeCount < 1:
+if params.nodeCount < 2:
     pc.reportError(portal.ParameterError(
-        "You must choose at least 1 node.", ["nodeCount"]))
+        "You must choose at least 2 nodes.", ["nodeCount"]))
 
 if params.tempFileSystemSize < 0 or params.tempFileSystemSize > 200:
     pc.reportError(portal.ParameterError("Please specify a size greater then zero and " +
@@ -179,9 +179,9 @@ for i in range(params.nodeCount):
         pass
     #add something to configure node CPUs in slurm.conf.
     if i == 0:
-        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/rootnode.sh && sudo /local/repository/rootnode.sh"))
+        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/rootnode.sh && sudo /local/repository/rootnode.sh " + str(params.nodeCount - 1)))
     else:
-        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/computenode.sh && sudo /local/repository/computenode.sh"))
+        node.addService(pg.Execute(shell="bash", command="sudo chmod +x /local/repository/computenode.sh && sudo /local/repository/computenode.sh " + str(params.nodeCount - 1)))
 
         
 
