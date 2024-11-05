@@ -4,7 +4,6 @@ apt install slurmd slurmctld -y
 apt install munge libmunge2 libmunge-dev -y
 ssh-keyscan -H node0 >> ~/.ssh/known_hosts #add key to known_hosts so scp works
 sleep 1
-echo "here"
 scp -o StrictHostKeyChecking=no root@node0:/etc/munge/munge.key /etc/munge/munge.key
 sleep 1
 sudo chown -R munge: /etc/munge/ /var/log/munge/ /var/lib/munge/ /run/munge/
